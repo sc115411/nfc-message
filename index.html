@@ -3,95 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFC Message</title>
+
+    <title>NFC Treasure Hunt</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: #f2f2f2;
+            padding: 20px;
         }
 
-        .message {
+        .card {
             background: white;
-            padding: 40px;
-            border-radius: 20px;
+            width: 100%;
             max-width: 600px;
-            width: 80%;
+            padding: 40px 30px;
+            border-radius: 25px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            animation: appear 0.5s ease;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji {
+            font-size: 60px;
+            margin-bottom: 10px;
         }
 
         h1 {
+            margin: 0 0 15px;
             font-size: 36px;
         }
 
-        p {
-            font-size: 20px;
+        .progress {
+            color: #777;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .clue {
+            font-size: 24px;
+            line-height: 1.5;
+            margin: 30px 0;
+        }
+
+        .button {
+            display: inline-block;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .button:hover {
+            transform: scale(1.04);
+        }
+
+        .button:active {
+            transform: scale(0.97);
+        }
+
+        .final {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+        }
+
+        .final .button {
+            background: white;
+            color: #ff5e62;
+        }
+
+        .error {
+            color: #c62828;
+        }
+
+        @media (max-width: 500px) {
+            .card {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .clue {
+                font-size: 21px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="message">
-    <h1 id="title">NFC Message</h1>
-    <p id="text">Loading...</p>
+<div class="card" id="card">
+
+    <div class="emoji" id="emoji">🔎</div>
+
+    <h1 id="title">Loading...</h1>
+
+    <div class="progress" id="progress"></div>
+
+    <div class="clue" id="clue"></div>
+
+    <button class="button" onclick="markFound()">
+        I've found it →
+    </button>
+
 </div>
+
 
 <script>
 
-const messages = {
+const clues = {
 
     "001": {
         title: "Clue 1",
-        text: "Head to somewhere where you might find glasses."
+        clue: "Head to somewhere where you might find glasses."
     },
 
     "002": {
         title: "Clue 2",
-        text: "Go where the coffee pods live."
+        clue: "Go where the coffee pods live."
     },
 
     "003": {
         title: "Clue 3",
-        text: "Head to where you might find out how to cook."
+        clue: "Head to where you might find out how to cook."
     },
 
     "004": {
         title: "Clue 4",
-        text: "Go where the TV remote normally lives."
+        clue: "Go where the TV remote normally lives."
     },
 
     "005": {
         title: "Clue 5",
-        text: "Where can you play some music?"
+        clue: "Where can you play some music?"
     },
 
     "006": {
         title: "You found it!",
-        text: "Well done you found the last one! Head back to the kitchen."
+        clue: "Well done you found the last one! Head back to the kitchen."
     }
 
 };
 
 
+// Get the ID from the URL
 const parameters = new URLSearchParams(window.location.search);
 const id = parameters.get("id");
 
-if (messages[id]) {
 
-    document.getElementById("title").textContent = messages[id].title;
-    document.getElementById("text").textContent = messages[id].text;
+// Check that the clue exists
+if (clues[id]) {
+
+    document.getElementById("title").textContent = clues[id].title;
+    document.getElementById("clue").textContent = clues[id].clue;
+
+
+    // Final clue
+    if (id === "006") {
+
+        document.getElementById("emoji").textContent = "🎉";
+
+        document.getElementById("progress").textContent =
+            "Treasure hunt complete!";
+
+        document.getElementById("card").classList.add("final");
+
+        document.querySelector(".button").textContent =
+            "🎉 Done!";
+
+    } else {
+
+        document.getElementById("progress").textContent =
+            "Clue " + parseInt(id) + " of 6";
+
+    }
 
 } else {
 
-    document.getElementById("title").textContent = "NFC Tag";
-    document.getElementById("text").textContent = "No message was found for this tag.";
+    document.getElementById("emoji").textContent = "❓";
+
+    document.getElementById("title").textContent =
+        "Clue not found";
+
+    document.getElementById("clue").textContent =
+        "This NFC tag doesn't have a valid clue.";
+
+    document.getElementById("progress").textContent = "";
+
+    document.querySelector(".button").style.display = "none";
+
+}
+
+
+// Button animation
+function markFound() {
+
+    const button = document.querySelector(".button");
+
+    button.textContent = "✓ Found!";
+
+    button.style.opacity = "0.7";
 
 }
 
@@ -99,3 +239,4 @@ if (messages[id]) {
 
 </body>
 </html>
+```
