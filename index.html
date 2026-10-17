@@ -1,10 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NFC Message</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f2f2f2;
+        }
+
+        .message {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 80%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Hello!</h1>
-    <p>This message was opened from an NFC tag.</p>
+
+<div class="message">
+    <h1 id="title">NFC Message</h1>
+    <p id="text">Loading...</p>
+</div>
+
+<script>
+
+const messages = {
+
+    "001": {
+        title: "Welcome!",
+        text: "This is NFC tag 001."
+    },
+
+    "002": {
+        title: "Information",
+        text: "This is NFC tag 002."
+    },
+
+    "003": {
+        title: "Hello!",
+        text: "This is NFC tag 003."
+    }
+
+};
+
+
+const parameters = new URLSearchParams(window.location.search);
+const id = parameters.get("id");
+
+if (messages[id]) {
+
+    document.getElementById("title").textContent = messages[id].title;
+    document.getElementById("text").textContent = messages[id].text;
+
+} else {
+
+    document.getElementById("title").textContent = "NFC Tag";
+    document.getElementById("text").textContent = "No message was found for this tag.";
+
+}
+
+</script>
+
 </body>
 </html>
