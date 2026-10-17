@@ -67,40 +67,16 @@
             margin: 30px 0;
         }
 
-        .button {
-            display: inline-block;
-            border: none;
-            border-radius: 12px;
-            padding: 15px 25px;
+        .instruction {
             font-size: 18px;
             font-weight: bold;
-            cursor: pointer;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .button:hover {
-            transform: scale(1.04);
-        }
-
-        .button:active {
-            transform: scale(0.97);
+            line-height: 1.4;
+            margin-top: 30px;
         }
 
         .final {
             background: linear-gradient(135deg, #ff9966, #ff5e62);
             color: white;
-        }
-
-        .final .button {
-            background: white;
-            color: #ff5e62;
-        }
-
-        .error {
-            color: #c62828;
         }
 
         @media (max-width: 500px) {
@@ -114,6 +90,10 @@
 
             .clue {
                 font-size: 21px;
+            }
+
+            .instruction {
+                font-size: 17px;
             }
         }
     </style>
@@ -131,9 +111,7 @@
 
     <div class="clue" id="clue"></div>
 
-    <button class="button" onclick="markFound()">
-        I've found it →
-    </button>
+    <div class="instruction" id="instruction"></div>
 
 </div>
 
@@ -197,13 +175,16 @@ if (clues[id]) {
 
         document.getElementById("card").classList.add("final");
 
-        document.querySelector(".button").textContent =
-            "🎉 Done!";
+        document.getElementById("instruction").textContent =
+            "🎉 Great job! You found them all!";
 
     } else {
 
         document.getElementById("progress").textContent =
             "Clue " + parseInt(id) + " of 6";
+
+        document.getElementById("instruction").textContent =
+            "Great job! Tap the card against the back of the phone for the next clue.";
 
     }
 
@@ -219,19 +200,7 @@ if (clues[id]) {
 
     document.getElementById("progress").textContent = "";
 
-    document.querySelector(".button").style.display = "none";
-
-}
-
-
-// Button animation
-function markFound() {
-
-    const button = document.querySelector(".button");
-
-    button.textContent = "✓ Found!";
-
-    button.style.opacity = "0.7";
+    document.getElementById("instruction").textContent = "";
 
 }
 
