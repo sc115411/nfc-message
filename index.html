@@ -61,9 +61,7 @@
             margin-top: 30px;
         }
 
-        .reveal-button {
-            background: #667eea;
-            color: white;
+        button {
             border: none;
             padding: 16px 30px;
             border-radius: 12px;
@@ -73,7 +71,17 @@
             margin-top: 20px;
         }
 
-        .reveal-button:active {
+        .reveal-button {
+            background: #667eea;
+            color: white;
+        }
+
+        .found-button {
+            background: #22c55e;
+            color: white;
+        }
+
+        button:active {
             transform: scale(0.97);
         }
 
@@ -124,6 +132,10 @@
 
     <button class="reveal-button" id="revealButton">
         Reveal clue
+    </button>
+
+    <button class="found-button hidden" id="foundButton">
+        Found it!
     </button>
 
     <div class="instruction" id="instruction"></div>
@@ -189,36 +201,48 @@ if (clues[id]) {
 
         document.getElementById("card").classList.add("final");
 
-        document.getElementById("revealButton").textContent =
-            "Reveal final message";
-
     } else {
 
         document.getElementById("progress").textContent =
             "Clue " + parseInt(id) + " of 6";
 
-        document.getElementById("instruction").textContent =
-            "Press the button to reveal your clue.";
-
     }
 
 
-    // Reveal the clue when the button is pressed
+    // Reveal clue button
     document.getElementById("revealButton").addEventListener("click", function() {
 
+        // Show the clue
         document.getElementById("clue").classList.remove("hidden");
 
+        // Hide Reveal clue button
         document.getElementById("revealButton").classList.add("hidden");
 
-        if (id !== "006") {
+        // Show Found it button
+        document.getElementById("foundButton").classList.remove("hidden");
+
+        // Instruction before finding it
+        document.getElementById("instruction").textContent =
+            "Found the location? Press the button.";
+
+    });
+
+
+    // Found it button
+    document.getElementById("foundButton").addEventListener("click", function() {
+
+        // Hide Found it button
+        document.getElementById("foundButton").classList.add("hidden");
+
+        if (id === "006") {
 
             document.getElementById("instruction").textContent =
-                "Great job! Tap the card against the back of the phone for the next clue.";
+                "🎉 Great job! You found them all!";
 
         } else {
 
             document.getElementById("instruction").textContent =
-                "🎉 Great job! You found them all!";
+                "Great job! Tap the card against the back of the phone for the next clue.";
 
         }
 
@@ -240,6 +264,8 @@ if (clues[id]) {
     document.getElementById("instruction").textContent = "";
 
     document.getElementById("revealButton").classList.add("hidden");
+
+    document.getElementById("foundButton").classList.add("hidden");
 
 }
 
